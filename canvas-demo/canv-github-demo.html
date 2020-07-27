@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>canvs绘制半圆圆弧</title>
+</head>
+<body>
+
+<canvas id="myCanvas" width="300" height="300" style="border:1px solid #d3d3d3;">
+您的浏览器不支持 HTML5 canvas 标签。
+</canvas>
+<script>
+	var num = 50;
+
+	var startRad = 0.9;
+	var endRad = 2.1;
+	var R1 = 110;
+	var R2 = 90; 
+	var R3 = 75;
+	var PI = Math.PI;
+	var ctx = document.getElementById('myCanvas').getContext('2d');
+
+	ctx.translate(150, 150); // 注意，更改坐标原点了！！！！！！
+
+	
+	// 1、绘制中心半圆
+	ctx.beginPath();
+	var gradient3=ctx.createLinearGradient(0, 0, 0, 27.5);
+	gradient3.addColorStop("0", "#F1F9F7");
+	gradient3.addColorStop("1", "#FFFFFF");
+	ctx.strokeStyle = '#FFFFFF';
+	ctx.fillStyle = gradient3;
+	ctx.arc(0, 0, R3, startRad * PI, endRad * PI);
+	ctx.fill();
+	ctx.stroke();
+	ctx.save();
+
+	// 2、绘制文本
+	ctx.textAlign = "center";
+	ctx.font = "normal normal bold 40px arial";
+	ctx.fillStyle = '#373839';
+	ctx.fillText(num, 0, 0);
+
+
+	// 3、绘制圆弧下一圈点点点
+	ctx.beginPath();
+	ctx.arc(0, 0, 0, 0.7 * PI, 2.3 * PI); //绘制圆周
+	ctx.stroke();
+	ctx.closePath();
+	for (let i = -3; i < 34; i++){
+		const deg = -PI + i * PI / 30;
+		ctx.save();
+		ctx.rotate(deg);  //旋转坐标轴。坐标轴x的正方形从 向上开始算起
+		ctx.beginPath();
+		ctx.moveTo(R2, 0);
+		ctx.lineTo(R2 + 2, 0);
+		ctx.lineWidth = 2;
+		ctx.strokeStyle = "#449284";
+		ctx.stroke();
+		ctx.closePath();
+		ctx.restore();
+		ctx.save();
+	}
+	
+
+	// 4、绘制圆弧
+	ctx.beginPath();
+	var gradient2=ctx.createLinearGradient(0, 0, 100, 0);
+	gradient2.addColorStop("0","#50CFFF");
+	gradient2.addColorStop("1","#15D064");
+	ctx.strokeStyle = gradient2;
+	ctx.lineWidth = 4;
+	//ctx.setLineWidth(4);
+	ctx.arc(0, 0, R1, startRad * PI, endRad * PI);
+	ctx.stroke();
+	ctx.save();
+
+
+	// // 5、绘制数值圆点，圆心根据数值处在外层圆弧上
+	// const radiusNum = num / 100 * 1.2 + startRad;
+	// const curX = R1 * Math.cos(PI * radiusNum); // 当前最小值的x坐标
+	// const curY = R1 * Math.sin(PI * radiusNum); // 当前最小值的y坐标
+	// // 外圆
+	// ctx.beginPath();
+	// ctx.arc(curX, curY, 6, 0, PI * 2, true);
+	// ctx.lineWidth = 2;
+	// ctx.strokeStyle = "#E4F1EE";// 边框颜色
+	// ctx.fillStyle = 'red';
+	// ctx.fill();
+	// ctx.stroke();
+	// // 中心小圆
+	// ctx.beginPath();
+	// ctx.arc(curX, curY, 2.5, 0, PI * 2, true);
+	// ctx.fillStyle = '#2CD0A0'; // 圆点的中心小圆背景色
+	// ctx.fill();
+	// ctx.stroke();
+	// ctx.save();
+
+
+
+	ctx.translate(0, 0); // 注意，更改坐标原点了！！！！！！
+  var imgData=ctx.getImageData(0,0,300,300);
+  console.log(imgData)
+
+	for(let i = 0; i< num; i++){
+
+		setTimeout(()=>{
+  		ctx.putImageData(imgData,0,0);
+				// ctx.restore();
+				const radiusNum = i / 100 * 1.2 + startRad;
+				const curX = R1 * Math.cos(PI * radiusNum); // 当前最小值的x坐标
+				const curY = R1 * Math.sin(PI * radiusNum); // 当前最小值的y坐标
+				// console.log(i);
+				// 外圆
+				ctx.beginPath();
+				ctx.arc(curX, curY, 6, 0, PI * 2, true);
+				ctx.lineWidth = 2;
+				ctx.strokeStyle = "#E4F1EE";// 边框颜色
+				ctx.fillStyle = 'red';
+				ctx.fill();
+				ctx.stroke();
+
+				ctx.beginPath();
+				ctx.arc(curX, curY, 2.5, 0, PI * 2, true);
+				ctx.fillStyle = '#2CD0A0'; // 圆点的中心小圆背景色
+				ctx.fill();
+
+		}, i*10);
+	}
+
+ 
+</script>
+
+</body>
+</html>
