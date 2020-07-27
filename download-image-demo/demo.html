@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>下载图片</title>
+</head>
+
+<body>
+	<h1>在图片url是服务端返回的时候，不知道图片是同源的还是跨域的情况下，需要将图片转为base64，而请求图片返回的是二进制流，因此只要将二进制流转为base64就可以了。</h1>
+    <a href="" id="aaaaa" download="wutao1818.png">来下载我呀</a>
+</body>
+<script>
+var url = 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3893146502,314297687&fm=27&gp=0.jpg';
+var xhr = new XMLHttpRequest();
+xhr.open('GET', url, true);
+xhr.responseType = "blob";
+xhr.onload = function() {
+    if (this.status == 200) {
+        var blob = this.response;
+        var img = document.createElement("img");
+        img.onload = function(e) {
+            window.URL.revokeObjectURL(img.src);
+        };
+        img.src = window.URL.createObjectURL(blob);
+        blobToDataURI(blob, function(data) {
+        	console.log(img)
+            console.log(data)
+            document.getElementById('aaaaa').setAttribute('href',data);
+        })
+    }
+}
+xhr.send();
+
+function blobToDataURI(blob, callback) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        callback(e.target.result);
+    }
+    reader.readAsDataURL(blob);
+}
+
+</script>
+
+
+</html>
